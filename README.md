@@ -1,3 +1,5 @@
+[![CNTi cert](https://github.com/livekit/livekit-helm/actions/workflows/cnti.yml/badge.svg)](https://github.com/livekit/livekit-helm/actions/workflows/cnti.yml)
+
 
 LiveKit's helm charts are published on S3.
 
