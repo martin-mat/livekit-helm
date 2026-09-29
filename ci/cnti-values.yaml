@@ -1,27 +1,12 @@
-# Values for the CNTi Test Suite run (.github/workflows/cnti.yml): LiveKit in
-# an in-cluster profile. Real clients need host or load-balanced UDP; the run
-# only needs the server to start, scale and drain, so host networking is off
-# and the RTC TCP port is unset (the template gives every set RTC port a
-# hostPort). API keys are for this test only.
-podHostNetwork: false
 livekit:
   rtc:
-    tcp_port: null
     use_external_ip: false
   keys:
     cntikey: cnti-test-only-secret-with-enough-length
 resources:
-  requests: {cpu: 100m, memory: 128Mi}
-  limits: {cpu: 1000m, memory: 512Mi}
-podSecurityContext:
-  runAsNonRoot: true
-  runAsUser: 1000
-  runAsGroup: 1000
-securityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
-  capabilities:
-    drop: ["ALL"]
-# The chart's 5 h default lets rooms drain; with no rooms the server exits at
-# once, and a shorter bound keeps node_drain and rollouts within the run.
-terminationGracePeriodSeconds: 30
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 1000m
+    memory: 512Mi
