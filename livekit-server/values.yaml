@@ -96,8 +96,10 @@ resources:
   #   memory: 1024Mi
 
 serviceAccount:
-  # Specifies whether a service account should be created
-  create: false
+  # Specifies whether a service account should be created. The pods then run
+  # as their own account instead of the namespace's default one, which other
+  # workloads share; the account gets no permissions.
+  create: true
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.

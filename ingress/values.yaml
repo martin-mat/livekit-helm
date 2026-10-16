@@ -43,7 +43,9 @@ nodeSelector: {}
 resources: {}
 
 serviceAccount:
-  create: false
+  # Create a service account for the pods, so they don't run as the
+  # namespace's default one, which other workloads share
+  create: true
   annotations: {}
   name: ""
 
