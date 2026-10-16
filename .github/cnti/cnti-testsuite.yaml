@@ -1,0 +1,10 @@
+---
+# livekit-server from this checkout (master or the fix), with the values the
+# earlier measurement used on kind: no external IP lookup, a test key, sizing.
+config_version: "v2"
+deployments:
+  helm_dirs:
+    - name: livekit
+      helm_directory: ../../livekit-server
+      namespace: livekit-cnti
+      helm_values: --values .github/cnti/values.yaml

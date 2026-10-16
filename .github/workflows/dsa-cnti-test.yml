@@ -1,0 +1,44 @@
+name: CNTi dedicated service account test
+on:
+  push:
+    branches: [dsa-cnti-test]
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {name: "master: dedicated_service_account", ref: upstream-master, tests: dedicated_service_account}
+          - {name: "fix: dedicated_service_account", ref: fix, tests: dedicated_service_account}
+          - {name: "fix: essential", ref: fix, tests: cert}
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Chart from ${{ matrix.ref }}
+        run: |
+          set -euo pipefail
+          if [ "${{ matrix.ref }}" = upstream-master ]; then
+            git remote add upstream https://github.com/livekit/livekit-helm.git
+            git fetch -q upstream master
+            git checkout -q upstream/master -- livekit-server
+          fi
+          grep -n -A2 "^serviceAccount:" livekit-server/values.yaml
+      - uses: lfn-cnti/testsuite-action@70536fda55fcb11f4f7463175fe9d57c86b85574 # v1.2.0
+        with:
+          version: v2.3.0
+          cnf_config: .github/cnti/cnti-testsuite.yaml
+          tests: ${{ matrix.tests }}
+          log_level: info
+          install_timeout: "600"
+          fail_on_failure: "false"
+      - name: Service accounts in use
+        if: always()
+        run: |
+          kubectl get sa -n livekit-cnti
+          kubectl get pods -n livekit-cnti -o custom-columns=POD:.metadata.name,SA:.spec.serviceAccountName,STATUS:.status.phase
